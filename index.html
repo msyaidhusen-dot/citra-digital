@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Filter Spasial: Menghaluskan dan Menajamkan Citra Digital</title>
+  <meta name="description" content="Contoh artikel UTS Pengolahan Citra Digital: Filter Spasial untuk penghalusan dan penajaman citra. Termasuk kode Python + OpenCV siap dijalankan.">
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#6ee7b7}
+    *{box-sizing:border-box}
+    body{font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;line-height:1.6;background:#f6f8fb;color:#0b1220;margin:0;padding:0}
+    .container{max-width:900px;margin:40px auto;padding:28px;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(11,18,32,0.06)}
+    header{display:flex;gap:16px;align-items:center;margin-bottom:18px}
+    .logo{width:64px;height:64px;border-radius:10px;background:linear-gradient(135deg,#6ee7b7,#60a5fa);display:flex;align-items:center;justify-content:center;color:#04263b;font-weight:700;font-size:20px}
+    h1{font-size:26px;margin:0 0 6px}
+    .meta{color:var(--muted);font-size:14px}
+    h2{margin-top:22px}
+    pre{background:#0b1220;color:#e6eef6;padding:16px;border-radius:8px;overflow:auto}
+    code{font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:20px}
+    .card{background:#f8fafc;padding:14px;border-radius:10px;border:1px solid #eef2f7}
+    .figure{width:100%;height:220px;background:#e6eef6;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#94a3b8}
+    .btn{display:inline-block;padding:10px 14px;border-radius:8px;background:var(--accent);color:#04263b;font-weight:600;text-decoration:none}
+    footer{margin-top:28px;color:var(--muted);font-size:13px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr} .card{order:2}}
+  </style>
+</head>
+<body>
+  <main class="container" role="main">
+    <header>
+      <div class="logo">IMG</div>
+      <div>
+        <h1>Filter Spasial: Menghaluskan dan Menajamkan Citra Digital</h1>
+        <div class="meta">UTS Pengolahan Citra Digital — Contoh artikel &amp; kode • Siap publish</div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <article>
+        <section>
+          <h2>✨ Pendahuluan</h2>
+          <p>Filter spasial merupakan teknik dasar dalam pengolahan citra yang bekerja langsung pada domain spasial dengan memodifikasi nilai piksel berdasarkan tetangga di sekitarnya. Tujuan umum penggunaan filter spasial adalah untuk <strong>menghaluskan</strong> (mengurangi noise) dan <strong>menajamkan</strong> (meningkatkan detail/tepi) citra.</p>
+        </section>
+
+        <section>
+          <h2>🧩 Apa Itu Filter Spasial?</h2>
+          <p>Operasi filter spasial umumnya dinyatakan sebagai konvolusi antara citra dan sebuah <em>kernel</em> (mask), sebuah matriks kecil seperti 3×3 atau 5×5. Secara matematis:</p>
+          <pre><code>g(x,y) = Σ Σ f(x+i,y+j) · h(i,j)</code></pre>
+          <p>di mana <code>g(x,y)</code> adalah citra hasil, <code>f(x,y)</code> citra sumber, dan <code>h(i,j)</code> kernel.</p>
+        </section>
+
+        <section>
+          <h2>🧹 Jenis Filter Spasial</h2>
+          <h3>1. Smoothing (Low-pass)</h3>
+          <p>Smoothing berguna untuk mengurangi noise. Contoh kernel rata-rata (mean filter 3×3):</p>
+          <pre><code>1/9 · [[1,1,1],[1,1,1],[1,1,1]]</code></pre>
+
+          <h3>2. Sharpening (High-pass)</h3>
+          <p>Sharpening menonjolkan tepi dan detail. Contoh kernel 3×3 penajaman:</p>
+          <pre><code>[[0,-1,0],[-1,5,-1],[0,-1,0]]</code></pre>
+        </section>
+
+        <section>
+          <h2>⚙️ Implementasi (Python + OpenCV)</h2>
+          <p>Salin kode di bawah ke file <code>filter_spasial.py</code>. Pastikan Python dan OpenCV sudah terpasang (<code>pip install opencv-python matplotlib</code>).</p>
+
+          <pre><code>import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+# Ganti 'gambar.jpg' dengan path gambar kamu
+timg = cv2.imread('gambar.jpg')
+img = cv2.cvtColor(timg, cv2.COLOR_BGR2RGB)
+
+# Kernel smoothing (rata-rata)
+kernel_smooth = np.ones((3,3), np.float32) / 9
+smooth = cv2.filter2D(img, -1, kernel_smooth)
+
+# Kernel sharpening
+kernel_sharp = np.array([[0, -1, 0],
+                         [-1, 5, -1],
+                         [0, -1, 0]])
+sharp = cv2.filter2D(img, -1, kernel_sharp)
+
+# Tampilkan hasil
+plt.figure(figsize=(12,6))
+plt.subplot(1,3,1); plt.imshow(img); plt.title('Citra Asli'); plt.axis('off')
+plt.subplot(1,3,2); plt.imshow(smooth); plt.title('Hasil Smoothing'); plt.axis('off')
+plt.subplot(1,3,3); plt.imshow(sharp); plt.title('Hasil Sharpening'); plt.axis('off')
+plt.tight_layout(); plt.show()</code></pre>
+
+          <p><strong>Catatan:</strong> Jika hasil sharpening menonjolkan noise, pertimbangkan untuk melakukan smoothing terlebih dahulu sebelum penajaman (two-step).</p>
+        </section>
+
+        <section>
+          <h2>🧪 Hasil dan Analisis</h2>
+          <p>Setelah menjalankan kode, perhatikan perbedaan visual antar ketiga citra: asli, smoothing, dan sharpening. Smoothing akan mengurangi detail halus dan bintik, sedangkan sharpening meningkatkan ketajaman tepi namun dapat memperkuat noise.</p>
+
+          <table style="width:100%;border-collapse:collapse;margin-top:10px">
+            <thead>
+              <tr style="text-align:left"><th>Jenis Filter</th><th>Efek</th><th>Keterangan</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Smoothing</td><td>Citra lebih halus, noise berkurang</td><td>Detail halus sedikit hilang</td></tr>
+              <tr><td>Sharpening</td><td>Detail tepi lebih tajam</td><td>Noise bisa ikut menonjol</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>💡 Kesimpulan</h2>
+          <p>Filter spasial adalah pondasi penting dalam pengolahan citra. Pilihan kernel dan urutan operasi (mis. smoothing lalu sharpening) menentukan hasil akhir. Teknik ini sering dipakai sebagai preprocessing sebelum deteksi tepi atau segmentasi.</p>
+        </section>
+
+        <section>
+          <h2>🔗 Referensi</h2>
+          <ul>
+            <li>Gonzalez, R. C., &amp; Woods, R. E. (2018). <em>Digital Image Processing</em>.</li>
+            <li>OpenCV Documentation — https://docs.opencv.org</li>
+          </ul>
+        </section>
+
+      </article>
+
+      <aside>
+        <div class="card">
+          <h3>Preview Gambar</h3>
+          <div class="figure">Ganti dengan gambar input/output</div>
+          <p style="margin-top:12px;color:var(--muted);font-size:14px">Instruksi cepat:</p>
+          <ol style="padding-left:18px">
+            <li>Ganti <code>gambar.jpg</code> pada kode dengan file gambar kamu.</li>
+            <li>Simpan file sebagai <code>filter_spasial.py</code> dan jalankan <code>python filter_spasial.py</code>.</li>
+            <li>Untuk GitHub Pages: letakkan file ini sebagai <code>index.html</code> pada repository &amp; aktifkan Pages pada branch <code>main</code>.</li>
+          </ol>
+          <p style="margin-top:12px"><a class="btn" href="#code">Salin Kode</a></p>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <h3>Versi Siap Upload</h3>
+          <p style="color:var(--muted)">Simpan halaman ini sebagai <code>index.html</code> — langsung bisa di-push ke GitHub Pages atau dibuka lokal di browser.</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <p>Artikel dibuat otomatis — gunakan untuk referensi tugas UTS. Jika mau, saya bisa juga membuat versi PDF atau file <code>.py</code> terpisah.</p>
+    </footer>
+  </main>
+</body>
+</html>
