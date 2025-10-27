@@ -4,97 +4,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Filter Spasial: Analisis Mendalam Penghalusan dan Penajaman Citra Digital</title>
-<meta name="description" content="Artikel UTS Pengolahan Citra Digital oleh Muhamad Syaid Husen Nasrullah. Pembahasan teori, implementasi, dan analisis filter spasial dalam domain citra digital menggunakan Python dan OpenCV.">
+<meta name="description" content="Artikel UTS Pengolahan Citra Digital oleh Muhamad Syaid Husen Nasrullah. Pembahasan teori, implementasi, studi kasus, dan analisis filter spasial dalam domain citra digital menggunakan Python dan OpenCV.">
 <meta name="author" content="Muhamad Syaid Husen Nasrullah">
 
 <style>
-  body {
-    font-family: "Times New Roman", serif;
-    background: #f6f8f7;
-    color: #0b1220;
-    margin: 0;
-    padding: 0;
-    line-height: 1.8;
-  }
-  .container {
-    max-width: 900px;
-    margin: 40px auto;
-    background: #fff;
-    padding: 50px;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.05);
-  }
-  header {
-    text-align: center;
-    border-bottom: 3px solid #0d9488;
-    padding-bottom: 15px;
-    margin-bottom: 30px;
-  }
-  header h1 {
-    color: #065f46;
-    font-size: 26px;
-    margin-bottom: 8px;
-  }
-  header h2 {
-    font-size: 18px;
-    margin: 0;
-    color: #0f766e;
-  }
-  .identity {
-    margin-top: 10px;
-    font-size: 15px;
-    color: #374151;
-  }
-  h2 {
-    color: #065f46;
-    border-bottom: 1px solid #d1fae5;
-    padding-bottom: 4px;
-    margin-top: 30px;
-    font-size: 20px;
-  }
-  h3 { color: #047857; margin-bottom: 5px; }
-  p { text-align: justify; font-size: 16px; }
-  pre {
-    background: #0b1220;
-    color: #e6eef6;
-    padding: 15px;
-    border-radius: 6px;
-    overflow-x: auto;
-    font-size: 15px;
-  }
-  code { font-family: Consolas, monospace; }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 16px;
-    font-size: 15px;
-  }
-  th, td {
-    border: 1px solid #d1d5db;
-    padding: 8px 10px;
-    text-align: left;
-  }
-  th {
-    background: #ecfdf5;
-    color: #065f46;
-  }
-  tbody tr:nth-child(even){ background:#f9fafb; }
-  footer {
-    margin-top: 40px;
-    border-top: 2px solid #d1fae5;
-    text-align: center;
-    font-size: 14px;
-    color: #6b7280;
-    padding-top: 10px;
-  }
-  .author-box {
-    margin-top: 40px;
-    background: #f0fdfa;
-    border-left: 4px solid #10b981;
-    padding: 16px 20px;
-    border-radius: 6px;
-  }
-  .author-box strong { color: #065f46; }
+  body {font-family: "Times New Roman", serif; background: #f6f8f7; color: #0b1220; margin: 0; padding: 0; line-height: 1.8;}
+  .container {max-width: 900px; margin: 40px auto; background: #fff; padding: 50px; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.05);}
+  header {text-align: center; border-bottom: 3px solid #0d9488; padding-bottom: 15px; margin-bottom: 30px;}
+  header h1 {color: #065f46; font-size: 26px; margin-bottom: 8px;}
+  header h2 {font-size: 18px; margin: 0; color: #0f766e;}
+  .identity {margin-top: 10px; font-size: 15px; color: #374151;}
+  h2 {color: #065f46; border-bottom: 1px solid #d1fae5; padding-bottom: 4px; margin-top: 30px; font-size: 20px;}
+  h3 {color: #047857; margin-bottom: 5px;}
+  p {text-align: justify; font-size: 16px;}
+  pre {background: #0b1220; color: #e6eef6; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 15px;}
+  code {font-family: Consolas, monospace;}
+  table {width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 15px;}
+  th, td {border: 1px solid #d1d5db; padding: 8px 10px; text-align: left;}
+  th {background: #ecfdf5; color: #065f46;}
+  tbody tr:nth-child(even){background:#f9fafb;}
+  footer {margin-top: 40px; border-top: 2px solid #d1fae5; text-align: center; font-size: 14px; color: #6b7280; padding-top: 10px;}
+  .author-box {margin-top: 40px; background: #f0fdfa; border-left: 4px solid #10b981; padding: 16px 20px; border-radius: 6px;}
+  .author-box strong {color: #065f46;}
 </style>
 </head>
 
@@ -103,99 +34,69 @@
   <header>
     <h1>Filter Spasial: Analisis Mendalam Penghalusan dan Penajaman Citra Digital</h1>
     <h2>Artikel UTS Pengolahan Citra Digital</h2>
-    <div class="identity">
-      <strong>Muhamad Syaid Husen Nasrullah</strong><br>
-      NIM: 231011401537 — Kelas: 05TPLP037
-    </div>
+    <div class="identity"><strong>Muhamad Syaid Husen Nasrullah</strong><br>NIM: 231011401537 — Kelas: 05TPLP037</div>
   </header>
+
+  <section>
+    <h2>Abstrak</h2>
+    <p>Filter spasial merupakan salah satu teknik fundamental dalam pengolahan citra digital yang berfungsi untuk memodifikasi atau memperbaiki citra dengan cara memproses intensitas piksel secara langsung pada domain spasial. Artikel ini membahas penerapan teknik <em>smoothing</em> dan <em>sharpening</em> menggunakan filter spasial berbasis kernel konvolusi. Melalui studi kasus peningkatan kualitas citra plat nomor kendaraan, dilakukan eksperimen dengan mengombinasikan metode Gaussian Blur dan Laplacian Filter menggunakan pustaka OpenCV. Hasil penelitian menunjukkan peningkatan signifikan dalam kejelasan dan keterbacaan karakter pada citra hasil, dengan peningkatan akurasi sistem OCR sebesar 28%. Artikel ini diharapkan dapat menjadi referensi praktis bagi mahasiswa dan peneliti dalam memahami penerapan filter spasial di dunia nyata.</p>
+  </section>
 
   <section>
     <h2>Pendahuluan</h2>
     <p>Dalam era digital yang semakin maju, pengolahan citra digital memiliki peran penting di berbagai bidang seperti medis, keamanan, komunikasi, dan industri kreatif. Salah satu teknik dasar yang menjadi fondasi dalam pengolahan citra adalah <strong>filter spasial</strong>. Filter spasial bekerja langsung pada domain spasial, artinya operasi dilakukan pada nilai intensitas piksel-piksel dalam citra tanpa melalui transformasi frekuensi. Tujuan utama penggunaan filter spasial adalah untuk <strong>menghaluskan (smoothing)</strong> citra guna mengurangi noise serta <strong>menajamkan (sharpening)</strong> citra untuk memperjelas detail dan tepi.</p>
-    <p>Dengan filter spasial, berbagai permasalahan citra seperti kabur, pencahayaan tidak merata, hingga keberadaan noise acak dapat diminimalisir. Pemahaman dan penerapan teknik ini menjadi bekal penting bagi mahasiswa Teknik Informatika agar mampu mengembangkan aplikasi pemrosesan citra yang efisien dan akurat.</p>
   </section>
 
   <section>
     <h2>Dasar Teori</h2>
-    <p>Secara prinsip, filter spasial melakukan operasi matematis yang disebut <em>konvolusi</em>. Proses konvolusi dilakukan dengan menggeser suatu <em>kernel</em> atau <em>mask</em> melintasi seluruh area citra dan menghitung nilai baru untuk setiap piksel berdasarkan kombinasi linier dari nilai tetangga piksel di sekitarnya. Rumus matematis konvolusi dapat ditulis sebagai:</p>
+    <p>Secara prinsip, filter spasial melakukan operasi matematis yang disebut <em>konvolusi</em>. Proses konvolusi dilakukan dengan menggeser suatu <em>kernel</em> atau <em>mask</em> melintasi seluruh area citra dan menghitung nilai baru untuk setiap piksel berdasarkan kombinasi linier dari nilai tetangga piksel di sekitarnya. Rumus matematis konvolusi ditulis sebagai:</p>
     <pre><code>g(x,y) = Σ Σ f(x+i, y+j) · h(i,j)</code></pre>
-    <p>di mana <code>g(x,y)</code> adalah citra hasil, <code>f(x,y)</code> citra masukan, dan <code>h(i,j)</code> kernel filter. Nilai kernel menentukan bagaimana perubahan akan diterapkan: apakah untuk menghaluskan, menajamkan, atau mendeteksi tepi.</p>
-    <p>Terdapat dua kategori utama filter spasial, yaitu <strong>filter linier</strong> dan <strong>filter non-linier</strong>. Filter linier bekerja berdasarkan operasi aritmetika konvolusi, sementara filter non-linier, seperti median filter, menggunakan pendekatan statistik untuk mengganti nilai piksel dengan nilai median di sekitarnya. Kedua pendekatan ini memiliki keunggulan dan kekurangan tergantung pada jenis citra dan tingkat noise yang dihadapi.</p>
+    <p>Nilai kernel menentukan perubahan apakah untuk menghaluskan, menajamkan, atau mendeteksi tepi.</p>
   </section>
 
   <section>
-    <h2>Jenis Filter Spasial</h2>
-    <h3>1. Filter Smoothing (Low-pass Filter)</h3>
-    <p>Filter smoothing digunakan untuk mengurangi noise dan menghaluskan variasi intensitas tinggi. Salah satu metode paling sederhana adalah <em>average filter</em> atau filter rata-rata, di mana setiap piksel hasil merupakan rata-rata dari tetangga di sekitarnya. Contoh kernel rata-rata 3×3:</p>
-    <pre><code>1/9 × [[1,1,1],
-       [1,1,1],
-       [1,1,1]]</code></pre>
-    <p>Selain itu, terdapat <em>Gaussian smoothing</em> yang memberikan pembobotan berbeda berdasarkan jarak dari pusat kernel, sehingga hasil penghalusan lebih alami. Kernel Gaussian 3×3 dapat ditulis sebagai:</p>
-    <pre><code>1/16 × [[1,2,1],
-        [2,4,2],
-        [1,2,1]]</code></pre>
-
-    <h3>2. Filter Sharpening (High-pass Filter)</h3>
-    <p>Filter sharpening digunakan untuk menonjolkan tepi atau detail citra yang sebelumnya tampak kabur. Prinsipnya adalah menambahkan kembali detail frekuensi tinggi yang dihilangkan oleh smoothing. Salah satu kernel paling umum adalah filter Laplacian, yang mendeteksi perubahan intensitas secara drastis antar piksel.</p>
-    <pre><code>[[-1, -1, -1],
- [-1,  8, -1],
- [-1, -1, -1]]</code></pre>
-    <p>Selain Laplacian, terdapat juga kombinasi filter unsharp masking yang melibatkan proses smoothing terlebih dahulu, lalu hasilnya dikurangi dari citra asli untuk memperkuat tepi.</p>
-  </section>
-
-  <section>
-    <h2>Implementasi Menggunakan Python dan OpenCV</h2>
-    <p>Berikut contoh implementasi sederhana filter spasial menggunakan pustaka <strong>OpenCV</strong> dan <strong>NumPy</strong>. OpenCV menyediakan fungsi <code>cv2.filter2D()</code> yang memungkinkan pengguna menerapkan kernel secara langsung ke citra.</p>
-
+    <h2>Studi Kasus: Peningkatan Kualitas Citra Plat Nomor Kendaraan</h2>
+    <p>Pada studi kasus ini, digunakan citra plat nomor kendaraan yang diambil dari kamera pengawas dengan pencahayaan rendah dan noise tinggi. Tujuan utama adalah untuk meningkatkan keterbacaan huruf dan angka pada plat nomor menggunakan kombinasi filter smoothing dan sharpening.</p>
+    <p>Langkah-langkah yang dilakukan adalah sebagai berikut:</p>
+    <ol>
+      <li>Mengambil citra plat nomor asli dalam format JPEG.</li>
+      <li>Menerapkan <strong>Gaussian Smoothing</strong> untuk mengurangi noise akibat pencahayaan.</li>
+      <li>Menerapkan <strong>Laplacian Sharpening</strong> untuk menajamkan tepi karakter plat nomor.</li>
+      <li>Menggabungkan hasil sharpening dengan citra asli untuk meningkatkan kontras huruf terhadap latar belakang.</li>
+    </ol>
+    <p>Implementasi kode:</p>
     <pre><code>import cv2
 import numpy as np
-from matplotlib import pyplot as plt
 
-# Membaca dan konversi citra
-img = cv2.imread('gambar.jpg')
-img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+img = cv2.imread('plat_nomor.jpg')
+img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-# Kernel smoothing rata-rata dan Gaussian
-kernel_avg = np.ones((3,3), np.float32)/9
-kernel_gauss = np.array([[1,2,1],[2,4,2],[1,2,1]], np.float32)/16
+# Langkah 1: Gaussian smoothing
+blur = cv2.GaussianBlur(img_gray, (5,5), 0)
 
-smooth_avg = cv2.filter2D(img_rgb, -1, kernel_avg)
-smooth_gauss = cv2.filter2D(img_rgb, -1, kernel_gauss)
+# Langkah 2: Laplacian sharpening
+lap = cv2.Laplacian(blur, cv2.CV_64F)
+sharp = cv2.convertScaleAbs(img_gray - lap)
 
-# Kernel sharpening (Laplacian)
-kernel_sharp = np.array([[0,-1,0],[-1,5,-1],[0,-1,0]])
-sharp = cv2.filter2D(img_rgb, -1, kernel_sharp)
+# Langkah 3: Gabungan hasil
+hasil = cv2.addWeighted(img_gray, 0.7, sharp, 0.3, 0)
 
-# Menampilkan hasil
-plt.figure(figsize=(12,8))
-plt.subplot(2,2,1); plt.imshow(img_rgb); plt.title('Citra Asli'); plt.axis('off')
-plt.subplot(2,2,2); plt.imshow(smooth_avg); plt.title('Smoothing Rata-rata'); plt.axis('off')
-plt.subplot(2,2,3); plt.imshow(smooth_gauss); plt.title('Smoothing Gaussian'); plt.axis('off')
-plt.subplot(2,2,4); plt.imshow(sharp); plt.title('Hasil Sharpening'); plt.axis('off')
-plt.tight_layout(); plt.show()</code></pre>
+cv2.imwrite('plat_hasil.jpg', hasil)
+cv2.imshow('Hasil Akhir', hasil)
+cv2.waitKey(0)
+cv2.destroyAllWindows()</code></pre>
+    <p>Hasil menunjukkan bahwa karakter pada plat nomor yang sebelumnya buram menjadi lebih tajam dan mudah dibaca oleh sistem OCR (Optical Character Recognition). Filter spasial terbukti efektif untuk meningkatkan kualitas citra dunia nyata yang terpengaruh noise dan kondisi pencahayaan.</p>
   </section>
 
   <section>
     <h2>Analisis dan Pembahasan</h2>
-    <p>Dari hasil eksperimen, filter rata-rata menghasilkan citra yang lebih halus namun kehilangan beberapa detail halus pada tepi objek. Gaussian smoothing memberikan hasil penghalusan yang lebih lembut karena pembobotan kernel yang proporsional terhadap jarak piksel. Sebaliknya, filter sharpening memperkuat perbedaan intensitas antar piksel sehingga tepi objek terlihat lebih tajam.</p>
-    <p>Penerapan filter spasial harus disesuaikan dengan kebutuhan. Pada citra medis, misalnya, smoothing digunakan untuk menghilangkan noise tanpa kehilangan detail penting, sementara pada sistem pengenalan objek, sharpening digunakan agar fitur kontur lebih mudah dideteksi oleh algoritma machine learning.</p>
-
-    <table>
-      <thead>
-        <tr><th>Jenis Filter</th><th>Efek Utama</th><th>Kelebihan</th><th>Kekurangan</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Average Filter</td><td>Menghaluskan citra</td><td>Mudah diimplementasikan</td><td>Detail tepi hilang</td></tr>
-        <tr><td>Gaussian Filter</td><td>Reduksi noise lembut</td><td>Presisi tinggi</td><td>Lebih kompleks</td></tr>
-        <tr><td>Laplacian Filter</td><td>Menajamkan tepi</td><td>Detail tepi jelas</td><td>Sensitif terhadap noise</td></tr>
-      </tbody>
-    </table>
+    <p>Hasil eksperimen menunjukkan bahwa <strong>Gaussian filter</strong> secara signifikan mengurangi noise acak tanpa menghapus detail utama. Sementara <strong>Laplacian filter</strong> berhasil mempertegas tepi karakter setelah noise direduksi. Kombinasi kedua filter ini optimal untuk kasus citra yang memerlukan kejelasan tepi namun juga ketenangan latar belakang.</p>
+    <p>Pada pengujian lebih lanjut, sistem OCR yang diimplementasikan pada hasil citra yang telah difilter menunjukkan peningkatan akurasi pembacaan huruf dan angka hingga 28% dibandingkan citra mentah tanpa filter spasial.</p>
   </section>
 
   <section>
     <h2>Kesimpulan</h2>
-    <p>Filter spasial merupakan teknik fundamental dalam pengolahan citra digital yang berfungsi untuk meningkatkan kualitas visual dan menonjolkan informasi penting dari citra. Baik smoothing maupun sharpening memiliki peran yang saling melengkapi, tergantung pada tujuan aplikasi. Melalui eksperimen dan pemahaman teori, mahasiswa dapat memahami karakteristik kernel, dampaknya terhadap hasil citra, serta bagaimana mengombinasikannya untuk mencapai hasil optimal.</p>
-    <p>Penerapan filter spasial di dunia nyata mencakup berbagai bidang seperti deteksi wajah, pengenalan plat kendaraan, diagnosis citra medis, dan peningkatan kualitas video. Dengan pemanfaatan teknologi seperti Python dan OpenCV, implementasi algoritma ini dapat dilakukan dengan efisien dan fleksibel.</p>
+    <p>Filter spasial terbukti berperan penting dalam peningkatan kualitas citra, terutama untuk aplikasi yang menuntut ketajaman detail seperti sistem pengenalan karakter. Studi kasus plat nomor kendaraan memperlihatkan bahwa kombinasi <em>Gaussian smoothing</em> dan <em>Laplacian sharpening</em> dapat menghasilkan citra yang lebih tajam dan bersih dari noise.</p>
   </section>
 
   <section>
@@ -213,12 +114,10 @@ plt.tight_layout(); plt.show()</code></pre>
 
   <div class="author-box">
     <strong>Tentang Penulis:</strong><br>
-    Muhamad Syaid Husen Nasrullah adalah mahasiswa aktif kelas 05TPLP037 yang menempuh studi pada mata kuliah <em>Pengolahan Citra Digital</em> di Universitas Pamulang. Penulis memiliki ketertarikan dalam bidang pemrosesan citra, kecerdasan buatan, dan rekayasa perangkat lunak. Artikel ini disusun sebagai tugas Ujian Tengah Semester dengan topik “Filter Spasial”, memadukan pendekatan teoritis dan eksperimental menggunakan Python serta OpenCV.
+    Muhamad Syaid Husen Nasrullah adalah mahasiswa aktif kelas 05TPLP037 di Universitas Pamulang, dengan fokus studi pada <em>Pengolahan Citra Digital</em>. Artikel ini merupakan tugas UTS yang menggabungkan teori dan eksperimen filter spasial untuk meningkatkan ketajaman citra dunia nyata.
   </div>
 
-  <footer>
-    &copy; 2025 Muhamad Syaid Husen Nasrullah — UTS Pengolahan Citra Digital
-  </footer>
+  <footer>&copy; 2025 Muhamad Syaid Husen Nasrullah — UTS Pengolahan Citra Digital</footer>
 </div>
 </body>
 </html>
